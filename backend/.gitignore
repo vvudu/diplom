@@ -1,0 +1,44 @@
+# Python
+*.pyc
+*.pyo
+__pycache__/
+*.swp
+*.swo
+
+# Virtualenv
+venv/
+ENV/
+env/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+
+# VS Code
+.vscode/
+
+# Docker
+*.env
+docker-compose.override.yml
+docker-compose.dev.yml
+docker-compose.prod.yml
+.dockerignore
+
+# Celery & Redis
+celerybeat-schedule
+*.pid
+
+# Logs & Debugging
+logs/
+*.log
+debug.log
+nohup.out
+
+# System files
+.DS_Store
+Thumbs.db
+.idea/
+*.bak
