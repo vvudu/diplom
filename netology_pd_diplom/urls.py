@@ -18,5 +18,7 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('auth/', include('social_django.urls', namespace='social')),
+    path('silk/', include('silk.urls', namespace='silk')),
     path('api/v1/', include('backend.urls', namespace='backend')),  # Подключаем вложенные маршруты
 ]

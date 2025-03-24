@@ -41,9 +41,12 @@ INSTALLED_APPS = [
     'django_rest_passwordreset',
     'django_extensions',
     'backend',
+    'silk',
+    'social_django',
 ]
 
 MIDDLEWARE = [
+    'silk.middleware.SilkyMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -155,6 +158,31 @@ REST_FRAMEWORK = {
 }
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Дополнительные настройки Silk:
+SILKY_PYTHON_PROFILER = True
+SILKY_PYTHON_PROFILER_BINARY = False
+SILKY_AUTHENTICATION = True  # Silk доступен только авторизованным пользователям
+SILKY_AUTHORISATION = True   # Silk доступен только админам
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',  # пример с Google
+    'social_core.backends.github.GithubOAuth2',  # пример с GitHub
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '51104838205-0qfdqlfbj5bj0morbasr9blstd5mt10v.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
+
+# SOCIAL_AUTH_GITHUB_KEY = '<твой-GitHub-клиент-ID>'
+# SOCIAL_AUTH_GITHUB_SECRET = '<твой-GitHub-клиент-секрет>'
+
+LOGIN_REDIRECT_URL = '/admin/'
+LOGOUT_REDIRECT_URL = '/admin/'
+
+
+# Дополнительные настройки
+SOCIAL_AUTH_URL_NAMESPACE = 'social'
 
 # Настройки Celery
 CELERY_BROKER_URL = 'redis://redis:6379/0'  # URL для Redis
