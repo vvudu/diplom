@@ -19,6 +19,10 @@ from backend.models import Shop, Category, Product, ProductInfo, Parameter, Prod
 from backend.serializers import UserSerializer, CategorySerializer, ShopSerializer, ProductInfoSerializer, \
     OrderItemSerializer, OrderSerializer, ContactSerializer
 from backend.signals import new_user_registered, new_order
+from django.shortcuts import render
+
+def auth_page(request):
+    return render(request, 'auth_page.html')
 
 
 def strtobool(val):

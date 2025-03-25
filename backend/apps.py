@@ -6,6 +6,8 @@ class BackendConfig(AppConfig):
     name = 'backend'
 
     def ready(self):
+        
         """
         импортируем сигналы
         """
+        import backend.signals

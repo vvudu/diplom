@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'easy_thumbnails',
     'rest_framework',
     'rest_framework.authtoken',
     'django_rest_passwordreset',
@@ -81,14 +82,16 @@ WSGI_APPLICATION = 'netology_pd_diplom.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'mydatabase',
+        'USER': 'user',
+        'PASSWORD': 'password',
+        'HOST': 'db',
+        'PORT': 5432,
     }
-
-
 }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
@@ -177,9 +180,21 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 # SOCIAL_AUTH_GITHUB_KEY = '<твой-GitHub-клиент-ID>'
 # SOCIAL_AUTH_GITHUB_SECRET = '<твой-GitHub-клиент-секрет>'
 
+LOGIN_URL = '/admin/login/'
 LOGIN_REDIRECT_URL = '/admin/'
 LOGOUT_REDIRECT_URL = '/admin/'
 
+# Easy-Thumbnails
+THUMBNAIL_ALIASES = {
+    '': {
+        'small': {'size': (100, 100), 'crop': True},
+        'medium': {'size': (300, 300), 'crop': True},
+        'large': {'size': (600, 600), 'crop': False},
+    },
+}
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Дополнительные настройки
 SOCIAL_AUTH_URL_NAMESPACE = 'social'

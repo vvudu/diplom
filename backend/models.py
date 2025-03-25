@@ -4,6 +4,8 @@ from django.contrib.auth.validators import UnicodeUsernameValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_rest_passwordreset.tokens import get_token_generator
+from easy_thumbnails.fields import ThumbnailerImageField
+
 
 STATE_CHOICES = (
     ('basket', 'Статус корзины'),
@@ -69,6 +71,7 @@ class User(AbstractUser):
     objects = UserManager()
     USERNAME_FIELD = 'email'
     email = models.EmailField(_('email address'), unique=True)
+    avatar = ThumbnailerImageField(upload_to='avatars/', blank=True, null=True)
     company = models.CharField(verbose_name='Компания', max_length=40, blank=True)
     position = models.CharField(verbose_name='Должность', max_length=40, blank=True)
     username_validator = UnicodeUsernameValidator()
@@ -137,6 +140,7 @@ class Category(models.Model):
 class Product(models.Model):
     objects = models.manager.Manager()
     name = models.CharField(max_length=80, verbose_name='Название')
+    image = ThumbnailerImageField(upload_to='products/', blank=True, null=True)
     category = models.ForeignKey(Category, verbose_name='Категория', related_name='products', blank=True,
                                  on_delete=models.CASCADE)
 
@@ -197,6 +201,9 @@ class ProductParameter(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['product_info', 'parameter'], name='unique_product_parameter'),
         ]
+
+    def __str__(self):
+        return f'{self.parameter}: {self.value}'
 
 
 class Contact(models.Model):
