@@ -1,68 +1,143 @@
-# Пример API-сервиса для магазина
+## 📌 Документация по развёртыванию и настройке проекта Django REST API
 
-[Документация по запросам в PostMan](https://documenter.getpostman.com/view/5037826/SVfJUrSc) 
+---
 
+### 🚀 1. Описание проекта
 
+Проект представляет собой RESTful API интернет-магазина на базе Django и Django Rest Framework, поддерживает асинхронные задачи через Celery и Redis, хранение данных в PostgreSQL и мониторинг производительности с помощью Django Silk. Реализована авторизация через Google OAuth2 и автоматизировано тестирование с покрытием через GitHub Actions.
 
+---
 
-## **Получить исходный код**
+### 🛠️ 2. Структура проекта
 
-    git config --global user.name "YOUR_USERNAME"
-    
-    git config --global user.email "your_email_address@example.com"
-    
-    mkdir ~/my_diplom
-    
-    cd my_diplom
-    
-    git clone git@github.com:A-Iskakov/netology_pd_diplom.git
-    
-    cd netology_pd_diplom
-    
-    sudo pip3 install  --upgrade pip
-    
-    sudo pip3 install -r requirements.txt
-    
-    python3 manage.py makemigrations
-     
-    python3 manage.py migrate
-    
-    python3 manage.py createsuperuser    
-    
- 
-## **Проверить работу модулей**
-    
-    
-    python3 manage.py runserver 0.0.0.0:8000
+```text
+netology_pd_diplom/
+├── backend/                 # Основное приложение проекта
+├── netology_pd_diplom/      # Настройки Django проекта
+├── tests/                   # Тесты проекта
+├── manage.py                # Консоль Django
+├── requirements.txt         # Зависимости проекта
+├── Dockerfile               # Docker-конфигурация
+├── docker-compose.yml       # Docker-compose конфигурация
+└── .github/workflows/       # GitHub Actions для CI и покрытия кода
+```
 
+---
 
-## **Установить СУБД (опционально)**
+### 📦 3. Требования к окружению
 
-    sudo nano  /etc/apt/sources.list.d/pgdg.list
-    
-    ----->
-    deb http://apt.postgresql.org/pub/repos/apt/ bionic-pgdg main
-    <<----
-    
-    
-    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
-    
-    sudo apt-get update
-    
-    sudo apt-get install postgresql-11 postgresql-server-dev-11
-    
-    sudo -u postgres psql postgres
-    
-    create user diplom_user with password 'password';
-    
-    alter role diplom_user set client_encoding to 'utf8';
-    
-    alter role diplom_user set default_transaction_isolation to 'read committed';
-    
-    alter role diplom_user set timezone to 'Europe/Moscow';
-    
-    create database diplom_db owner mploy;
-    alter user mploy createdb;
+- Python 3.12
+- Docker и Docker Compose
 
-    
-   
+---
+
+### 💻 4. Локальное развёртывание
+
+#### 4.1 Клонирование репозитория
+
+```bash
+git clone https://github.com/vvudu/diplom.git
+cd diplom
+```
+
+#### 4.2 Запуск Docker Compose
+
+```bash
+docker compose up -d --build
+```
+
+Будут запущены:
+- Django-приложение (`localhost:8000`)
+- PostgreSQL (`localhost:5432`)
+- Redis (`localhost:6379`)
+- Celery worker и Celery beat
+
+---
+
+### ⚙️ 5. Применение миграций и создание суперпользователя
+
+```bash
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py createsuperuser
+```
+
+---
+
+### 🔧 6. Настройка OAuth2 авторизации Google
+
+1. Создать OAuth-приложение в [Google Cloud Console](https://console.cloud.google.com/).
+2. Получить `Client ID` и `Client Secret`.
+3. Настроить `settings.py`:
+
+```python
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '<Google Client ID>'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '<Google Client Secret>'
+LOGIN_REDIRECT_URL = '/admin/'
+LOGOUT_REDIRECT_URL = '/admin/'
+```
+
+4. Выполнить миграции:
+
+```bash
+docker compose exec web python manage.py migrate
+```
+
+Проверка авторизации доступна по ссылке:
+```
+http://localhost:8000/auth/login/google-oauth2/
+```
+
+---
+
+### 📊 7. Django Silk (профилирование)
+
+Интерфейс Silk доступен по ссылке:
+```
+http://localhost:8000/silk/
+```
+
+---
+
+### 🧪 8. Запуск тестов и покрытие кода
+
+```bash
+docker compose exec web coverage run manage.py test
+docker compose exec web coverage report
+```
+
+Подробный отчёт (HTML):
+```bash
+docker compose exec web coverage html
+```
+
+---
+
+### ⚙️ 9. GitHub Actions
+
+Настроен автоматический запуск тестов и расчёт покрытия при создании Pull Request.
+
+Конфигурация в файле:
+```
+.github/workflows/python-coverage.yml
+```
+
+---
+
+### 🐳 10. Полезные Docker-команды
+
+- Проверка контейнеров:
+```bash
+docker compose ps
+```
+- Остановка контейнеров:
+```bash
+docker compose down
+```
+- Логи:
+```bash
+docker compose logs web
+```
+
+---
+
+Теперь проект готов к использованию и дальнейшему развитию!
